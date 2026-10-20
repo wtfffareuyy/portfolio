@@ -1,451 +1,485 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alex Rivera · Creative Portfolio</title>
+  <title>Gianmarco D'Assisi · Minecraft Portfolio</title>
   <style>
-    /* ── RESET & BASE ── */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ═══════ RESET ═══════ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --grass: #5aab3c;
+      --grass-dark: #3d7a26;
+      --dirt: #8b5a2b;
+      --dirt-dark: #5e3c1a;
+      --stone: #7f7f7f;
+      --diamond: #4aedd9;
+      --diamond-dark: #2ba89a;
+      --gold: #fcd34d;
+      --redstone: #ff3b3b;
+      --nether: #8b1a1a;
+      --sky: #87ceeb;
+      --night: #0a0e1a;
+      --wood: #b8860b;
     }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0a0a0a;
-      color: #f0f0f0;
-      line-height: 1.6;
+    html, body {
+      height: 100%;
       overflow-x: hidden;
     }
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #1a1a1a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #6c5ce7;
-      border-radius: 10px;
+    body {
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+      background: var(--night);
+      color: #fff;
+      line-height: 1.8;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
 
-    /* ── CANVAS BACKGROUND (particles) ── */
-    #bg-canvas {
+    /* ═══════ PIXEL FONT ═══════ */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+    /* ═══════ BACKGROUND SKY ═══════ */
+    #sky {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      background: linear-gradient(to bottom, #0d1b2a 0%, #1b263b 40%, #415a77 70%, #778da9 100%);
       z-index: 0;
-      pointer-events: none;
     }
 
-    /* ── GRADIENT ORBS ── */
-    .orb {
-      position: fixed;
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
       border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.35;
-      z-index: 0;
-      pointer-events: none;
-      animation: float 20s ease-in-out infinite alternate;
-    }
-    .orb-1 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, #6c5ce7, transparent 70%);
-      top: -10%;
-      right: -10%;
-      animation-delay: 0s;
-    }
-    .orb-2 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, #fd79a8, transparent 70%);
-      bottom: -5%;
-      left: -5%;
-      animation-delay: -7s;
-    }
-    .orb-3 {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, #00cec9, transparent 70%);
-      top: 40%;
-      left: 30%;
-      animation-delay: -14s;
+      animation: twinkle 3s infinite;
     }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(60px, -40px) scale(1.1); }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
     }
 
-    /* ── NAVIGATION ── */
+    /* ═══════ GROUND (grass blocks) ═══════ */
+    #ground {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      z-index: 1;
+      background-image:
+        linear-gradient(to bottom, var(--grass) 0 30px, var(--grass-dark) 30px 32px, var(--dirt) 32px 90px, var(--dirt-dark) 90px 92px, var(--stone) 92px 100%),
+        repeating-linear-gradient(90deg, transparent 0 30px, rgba(0,0,0,0.15) 30px 32px);
+      background-blend-mode: normal;
+    }
+
+    /* ═══════ NAVIGATION (Minecraft hotbar style) ═══════ */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 1.5rem 3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 100;
-      backdrop-filter: blur(12px);
-      background: rgba(10, 10, 10, 0.6);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .logo {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #6c5ce7, #fd79a8, #00cec9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .nav-links {
       display: flex;
-      gap: 2.5rem;
-      list-style: none;
+      gap: 4px;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 3px solid #3a3a3a;
+      border-radius: 4px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.5), inset 0 0 0 2px #000;
     }
 
-    .nav-links a {
-      color: #b0b0b0;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      transition: color 0.3s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #6c5ce7, #fd79a8);
-      transition: width 0.3s;
-    }
-
-    .nav-links a:hover {
+    nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: #8b8b8b;
+      border: 2px solid #373737;
+      border-top-color: #a0a0a0;
+      border-left-color: #a0a0a0;
       color: #fff;
+      text-decoration: none;
+      font-size: 22px;
+      transition: all 0.15s;
+      position: relative;
+      cursor: pointer;
+      text-shadow: 2px 2px 0 #000;
     }
 
-    .nav-links a:hover::after {
-      width: 100%;
+    nav a:hover {
+      background: #a5a5a5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 rgba(74, 237, 217, 0.5);
     }
 
-    /* ── HERO ── */
+    nav a .label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      margin-top: 2px;
+      color: #ffeb99;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    /* ═══════ HERO ═══════ */
     .hero {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 2rem;
-    }
-
-    .hero-content {
-      max-width: 800px;
+      padding: 120px 20px 140px;
     }
 
     .hero-badge {
       display: inline-block;
-      padding: 0.4rem 1.2rem;
-      border-radius: 999px;
-      border: 1px solid rgba(108, 92, 231, 0.4);
-      background: rgba(108, 92, 231, 0.1);
-      color: #a29bfe;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1.5px;
+      padding: 10px 20px;
+      background: rgba(74, 237, 217, 0.15);
+      border: 2px solid var(--diamond);
+      color: var(--diamond);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 1.5rem;
+      margin-bottom: 30px;
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px var(--diamond-dark); }
+      50% { box-shadow: 0 0 25px var(--diamond), 0 0 40px var(--diamond-dark); }
     }
 
     .hero h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 800;
-      line-height: 1.05;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(28px, 5vw, 56px);
+      line-height: 1.3;
+      color: #fff;
+      text-shadow:
+        4px 4px 0 #000,
+        6px 6px 0 var(--diamond-dark);
+      margin-bottom: 25px;
       letter-spacing: -2px;
-      margin-bottom: 1.5rem;
     }
 
-    .hero h1 span {
-      background: linear-gradient(135deg, #6c5ce7, #fd79a8, #00cec9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero h1 .accent {
+      color: var(--diamond);
+      text-shadow: 4px 4px 0 #000;
+    }
+
+    .hero h1 .gold {
+      color: var(--gold);
+      text-shadow: 4px 4px 0 #000;
     }
 
     .hero p {
-      font-size: 1.15rem;
-      color: #888;
-      max-width: 550px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.7;
+      font-family: 'VT323', monospace;
+      font-size: clamp(18px, 2vw, 24px);
+      color: #b8c9d8;
+      max-width: 700px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+      user-select: text;
     }
 
     .hero-cta {
       display: flex;
-      gap: 1rem;
-      justify-content: center;
+      gap: 20px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.9rem 2rem;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 600;
+    /* ═══════ MINECRAFT BUTTON ═══════ */
+    .mc-btn {
+      display: inline-block;
+      padding: 16px 32px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: #fff;
+      text-shadow: 2px 2px 0 #3a3a3a;
       text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       cursor: pointer;
-      transition: all 0.3s;
-      border: none;
+      border: 3px solid;
+      border-radius: 2px;
+      transition: all 0.08s;
+      position: relative;
+      image-rendering: pixelated;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-      color: #fff;
-      box-shadow: 0 8px 30px rgba(108, 92, 231, 0.35);
+    .mc-btn-primary {
+      background: #4a7c2e;
+      border-top-color: #6cb84c;
+      border-left-color: #6cb84c;
+      border-right-color: #2d4d1b;
+      border-bottom-color: #2d4d1b;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
+    }
+    .mc-btn-primary:hover {
+      background: #5a9a3c;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
+    }
+    .mc-btn-primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(108, 92, 231, 0.5);
+    .mc-btn-outline {
+      background: #3a3a3a;
+      border-top-color: #6a6a6a;
+      border-left-color: #6a6a6a;
+      border-right-color: #1a1a1a;
+      border-bottom-color: #1a1a1a;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
+    }
+    .mc-btn-outline:hover {
+      background: #4a4a4a;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
+    }
+    .mc-btn-outline:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.4), inset 0 0 0 1px #000;
     }
 
-    .btn-outline {
-      background: transparent;
-      color: #ccc;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-outline:hover {
-      border-color: rgba(108, 92, 231, 0.6);
-      color: #fff;
-      background: rgba(108, 92, 231, 0.08);
-    }
-
-    /* ── WORK SECTION ── */
+    /* ═══════ SECTIONS ═══════ */
     .section {
       position: relative;
-      z-index: 2;
-      padding: 6rem 3rem;
+      z-index: 10;
+      padding: 100px 20px;
       max-width: 1200px;
       margin: 0 auto;
     }
 
     .section-header {
-      margin-bottom: 3rem;
+      text-align: center;
+      margin-bottom: 60px;
     }
 
     .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: var(--diamond);
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: #6c5ce7;
-      margin-bottom: 0.75rem;
+      margin-bottom: 20px;
     }
 
     .section-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(20px, 3.5vw, 32px);
+      color: #fff;
+      text-shadow: 3px 3px 0 #000, 5px 5px 0 var(--diamond-dark);
       letter-spacing: -1px;
+      line-height: 1.4;
     }
 
+    /* ═══════ MINECRAFT CARD ═══════ */
+    .mc-card {
+      background: #c6c6c6;
+      border: 4px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #555;
+      border-bottom-color: #555;
+      padding: 25px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.6);
+      transition: all 0.15s;
+      position: relative;
+      image-rendering: pixelated;
+    }
+
+    .mc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 0 rgba(0,0,0,0.6);
+    }
+
+    .mc-card-inner {
+      background: #8b8b8b;
+      border: 3px solid;
+      border-top-color: #555;
+      border-left-color: #555;
+      border-right-color: #b0b0b0;
+      border-bottom-color: #b0b0b0;
+      padding: 20px;
+      height: 100%;
+    }
+
+    /* ═══════ PROJECTS GRID ═══════ */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
     }
 
-    .project-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(108, 92, 231, 0.08), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-
-    .project-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(108, 92, 231, 0.3);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .project-card:hover::before {
-      opacity: 1;
-    }
-
-    .project-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      z-index: 1;
+    .project-card .project-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+      filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+      image-rendering: pixelated;
     }
 
     .project-card h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      position: relative;
-      z-index: 1;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1.5;
     }
 
     .project-card p {
-      font-size: 0.9rem;
-      color: #777;
-      position: relative;
-      z-index: 1;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #2a2a2a;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      user-select: text;
     }
 
     .project-tag {
       display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.25rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      padding: 5px 12px;
+      background: var(--diamond);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      background: rgba(108, 92, 231, 0.12);
-      color: #a29bfe;
-      position: relative;
-      z-index: 1;
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+      margin-right: 6px;
+      margin-bottom: 6px;
     }
 
-    /* ── ABOUT ── */
-    .about-content {
+    .project-tag.gold { background: var(--gold); }
+    .project-tag.red { background: var(--redstone); color: #fff; }
+
+    /* ═══════ ABOUT ═══════ */
+    .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
+      gap: 40px;
+      align-items: start;
     }
 
-    .about-text p {
-      color: #999;
-      margin-bottom: 1.2rem;
-      font-size: 1rem;
+    .about-text .mc-card-inner p {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: #fff;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      user-select: text;
     }
 
-    .about-text p strong {
-      color: #eee;
+    .about-text .mc-card-inner p strong {
+      color: var(--gold);
     }
 
-    .about-stats {
+    .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 15px;
     }
 
-    .stat-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 1.5rem;
+    .stat {
+      background: #8b8b8b;
+      border: 3px solid;
+      border-top-color: #555;
+      border-left-color: #555;
+      border-right-color: #b0b0b0;
+      border-bottom-color: #b0b0b0;
+      padding: 20px 10px;
       text-align: center;
     }
 
     .stat-number {
-      font-size: 2.2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #6c5ce7, #fd79a8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 22px;
+      color: var(--gold);
+      text-shadow: 2px 2px 0 #000;
+      margin-bottom: 8px;
+      user-select: text;
     }
 
     .stat-label {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 0.25rem;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #2a2a2a;
       text-transform: uppercase;
       letter-spacing: 1px;
+      line-height: 1.4;
     }
 
-    /* ── CONTACT ── */
-    .contact-section {
+    /* ═══════ CONTACT ═══════ */
+    .contact-box {
       text-align: center;
-      padding: 6rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    .contact-section h2 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      margin-bottom: 1rem;
+    .contact-box .mc-card-inner {
+      padding: 50px 30px;
     }
 
-    .contact-section p {
-      color: #777;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
+    .contact-box h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: #fff;
+      margin-bottom: 25px;
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1.6;
     }
 
-    /* ── FOOTER ── */
+    .contact-box p {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: #d0d0d0;
+      margin-bottom: 30px;
+      user-select: text;
+    }
+
+    /* ═══════ FOOTER ═══════ */
     footer {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       text-align: center;
-      padding: 3rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      color: #444;
-      font-size: 0.85rem;
+      padding: 40px 20px 140px;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #6c7a89;
+      user-select: text;
     }
 
     /* ══════════════════════════════════════════════
-       ADMIN PANEL (hidden by default, Ctrl+C B)
+       ADMIN PANEL (password protected)
        ══════════════════════════════════════════════ */
     #admin-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 9999;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(16px);
+      z-index: 99999;
+      background: rgba(0, 0, 0, 0.92);
       justify-content: center;
       align-items: center;
-      padding: 2rem;
+      padding: 20px;
       opacity: 0;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
     }
 
     #admin-overlay.open {
@@ -454,191 +488,259 @@
     }
 
     .admin-panel {
-      background: #111;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
+      background: #1a1a1a;
+      border: 4px solid;
+      border-top-color: var(--diamond);
+      border-left-color: var(--diamond);
+      border-right-color: var(--diamond-dark);
+      border-bottom-color: var(--diamond-dark);
       width: 100%;
-      max-width: 800px;
+      max-width: 750px;
       max-height: 85vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(108, 92, 231, 0.15);
-      transform: scale(0.95);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    #admin-overlay.open .admin-panel {
-      transform: scale(1);
+      box-shadow: 0 0 60px rgba(74, 237, 217, 0.3);
     }
 
     .admin-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 18px 22px;
+      background: #0f0f0f;
+      border-bottom: 3px solid #333;
     }
 
     .admin-header h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: var(--diamond);
+      text-shadow: 2px 2px 0 #000;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 10px;
     }
 
-    .admin-header h2 span {
-      font-size: 0.7rem;
-      background: rgba(253, 121, 168, 0.15);
-      color: #fd79a8;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-weight: 600;
+    .admin-header h2 .badge {
+      background: var(--redstone);
+      color: #fff;
+      padding: 3px 8px;
+      font-size: 8px;
+      border: 2px solid #000;
     }
 
     .admin-close {
-      background: rgba(255, 255, 255, 0.06);
-      border: none;
-      color: #888;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      font-size: 1.2rem;
+      background: #3a3a3a;
+      border: 2px solid;
+      border-top-color: #6a6a6a;
+      border-left-color: #6a6a6a;
+      border-right-color: #1a1a1a;
+      border-bottom-color: #1a1a1a;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.1s;
     }
 
     .admin-close:hover {
-      background: rgba(253, 121, 168, 0.2);
-      color: #fd79a8;
+      background: var(--redstone);
     }
 
     .admin-body {
-      padding: 1.5rem 2rem;
+      padding: 22px;
       overflow-y: auto;
       flex: 1;
     }
 
+    /* ═══════ LOGIN FORM ═══════ */
+    .login-form {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .login-form .lock-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+      display: block;
+      filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+    }
+
+    .login-form h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #fff;
+      margin-bottom: 25px;
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1.6;
+    }
+
+    .login-form input {
+      width: 100%;
+      max-width: 350px;
+      padding: 14px 18px;
+      background: #0a0a0a;
+      border: 3px solid;
+      border-top-color: #555;
+      border-left-color: #555;
+      border-right-color: #2a2a2a;
+      border-bottom-color: #2a2a2a;
+      color: var(--diamond);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-align: center;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    .login-form input::placeholder {
+      color: #444;
+      letter-spacing: 1px;
+    }
+
+    .login-form input:focus {
+      border-color: var(--diamond);
+    }
+
+    .login-form .error-msg {
+      color: var(--redstone);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      margin-bottom: 15px;
+      min-height: 15px;
+      letter-spacing: 1px;
+    }
+
+    /* ═══════ VISITOR TABLE ═══════ */
+    .visitors-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+    }
+
+    .visitors-table th {
+      text-align: left;
+      padding: 12px 8px;
+      background: #0a0a0a;
+      color: var(--diamond);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #333;
+      position: sticky;
+      top: 0;
+    }
+
+    .visitors-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #2a2a2a;
+      color: #ddd;
+      user-select: text;
+    }
+
+    .visitors-table tbody tr:hover {
+      background: rgba(74, 237, 217, 0.08);
+    }
+
+    .visitors-table .ip {
+      color: var(--diamond);
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .visitors-table .time {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .visitor-status {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--grass);
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      border: 1px solid #000;
+    }
+
     .admin-empty {
       text-align: center;
-      padding: 3rem 1rem;
-      color: #555;
-      font-size: 0.95rem;
+      padding: 40px 20px;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #666;
     }
 
     .admin-empty .icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      font-size: 50px;
+      margin-bottom: 15px;
       opacity: 0.5;
     }
 
-    .ip-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
-
-    .ip-table th {
-      text-align: left;
-      padding: 0.75rem 0.5rem;
-      color: #666;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 600;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      position: sticky;
-      top: 0;
-      background: #111;
-    }
-
-    .ip-table td {
-      padding: 0.85rem 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: #ccc;
-    }
-
-    .ip-table tr {
-      transition: background 0.2s;
-    }
-
-    .ip-table tbody tr:hover {
-      background: rgba(108, 92, 231, 0.06);
-    }
-
-    .ip-code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82rem;
-      color: #a29bfe;
-    }
-
-    .ip-time {
-      font-size: 0.78rem;
-      color: #666;
-    }
-
-    .ip-badge {
-      display: inline-block;
-      padding: 0.15rem 0.55rem;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      background: rgba(0, 206, 201, 0.12);
-      color: #00cec9;
-      letter-spacing: 0.5px;
-    }
-
     .admin-footer {
-      padding: 1rem 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px 22px;
+      background: #0f0f0f;
+      border-top: 3px solid #333;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.78rem;
-      color: #555;
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+      color: #888;
+      user-select: text;
     }
 
     .admin-footer button {
-      background: rgba(253, 121, 168, 0.1);
-      border: 1px solid rgba(253, 121, 168, 0.25);
-      color: #fd79a8;
-      padding: 0.45rem 1rem;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      background: var(--redstone);
+      border: 2px solid;
+      border-top-color: #ff6b6b;
+      border-left-color: #ff6b6b;
+      border-right-color: #8b0000;
+      border-bottom-color: #8b0000;
+      color: #fff;
+      padding: 8px 14px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
       cursor: pointer;
-      transition: all 0.2s;
+      text-transform: uppercase;
+      transition: all 0.1s;
     }
 
     .admin-footer button:hover {
-      background: rgba(253, 121, 168, 0.2);
+      background: #ff5555;
     }
 
-    /* ── TOAST ── */
+    .admin-footer button:active {
+      transform: translateY(2px);
+    }
+
+    /* ═══════ TOAST ═══════ */
     #toast {
       position: fixed;
-      bottom: 2rem;
+      bottom: 140px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: #1a1a2e;
-      border: 1px solid rgba(108, 92, 231, 0.4);
-      color: #ddd;
-      padding: 0.85rem 1.5rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      z-index: 10000;
+      background: #1a1a1a;
+      border: 3px solid var(--diamond);
+      color: #fff;
+      padding: 14px 24px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      z-index: 100000;
       opacity: 0;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
+      box-shadow: 0 0 30px rgba(74, 237, 217, 0.5);
+      letter-spacing: 1px;
+      text-align: center;
+      max-width: 90vw;
     }
 
     #toast.show {
@@ -646,80 +748,138 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ── RESPONSIVE ── */
+    /* ═══════ ANTI-INSPECT OVERLAY ═══════ */
+    #anti-inspect {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: #000;
+      color: var(--redstone);
+      font-family: 'Press Start 2P', monospace;
+      text-align: center;
+      padding: 60px 20px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    #anti-inspect.show {
+      display: flex;
+    }
+
+    #anti-inspect .skull {
+      font-size: 100px;
+      margin-bottom: 30px;
+      animation: shake 0.5s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    /* ═══════ RESPONSIVE ═══════ */
     @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.2rem; }
-      .nav-links a { font-size: 0.78rem; }
-      .section { padding: 4rem 1.5rem; }
-      .about-content { grid-template-columns: 1fr; gap: 2rem; }
+      nav {
+        top: 10px;
+        gap: 2px;
+        padding: 4px;
+      }
+      nav a {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+      }
+      nav a .label { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
       .hero h1 { letter-spacing: -1px; }
-      .admin-panel { max-height: 90vh; }
-      .admin-body { padding: 1rem; }
+      #ground { height: 80px; }
+      .admin-header h2 { font-size: 9px; }
+      .visitors-table { font-size: 13px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ═══ BACKGROUND ═══ -->
-  <canvas id="bg-canvas"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <!-- ═══ SKY BACKGROUND ═══ -->
+  <div id="sky"></div>
+  <div id="stars"></div>
 
-  <!-- ═══ NAVIGATION ═══ -->
+  <!-- ═══ GROUND ═══ -->
+  <div id="ground"></div>
+
+  <!-- ═══ NAVIGATION (hotbar) ═══ -->
   <nav>
-    <div class="logo">alex.rivera</div>
-    <ul class="nav-links">
-      <li><a href="#work">Work</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <a href="#home" title="Home">🏠<span class="label">HOME</span></a>
+    <a href="#work" title="Projects">⛏️<span class="label">WORK</span></a>
+    <a href="#about" title="About">📖<span class="label">ABOUT</span></a>
+    <a href="#contact" title="Contact">✉️<span class="label">MAIL</span></a>
   </nav>
 
   <!-- ═══ HERO ═══ -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-badge">✦ Available for freelance</div>
-      <h1>Designing<br><span>digital experiences</span><br>that convert.</h1>
-      <p>I'm Alex — a full-stack designer & developer crafting bold, high-performance websites for ambitious brands worldwide.</p>
-      <div class="hero-cta">
-        <a href="#work" class="btn btn-primary">View my work →</a>
-        <a href="#contact" class="btn btn-outline">Get in touch</a>
-      </div>
+  <section class="hero" id="home">
+    <div class="hero-badge">⛏️ MINECRAFT PORTFOLIO ⛏️</div>
+    <h1>
+      <span class="accent">GIANMARCO</span><br>
+      <span class="gold">D'ASSISI</span>
+    </h1>
+    <p>
+      Building worlds, one block at a time.<br>
+      Minecraft builder · Redstone engineer · Server architect.
+    </p>
+    <div class="hero-cta">
+      <a href="#work" class="mc-btn mc-btn-primary">⛏ View Builds</a>
+      <a href="#contact" class="mc-btn mc-btn-outline">✉ Contact Me</a>
     </div>
   </section>
 
   <!-- ═══ WORK ═══ -->
   <section class="section" id="work">
     <div class="section-header">
-      <div class="section-label">Selected Work</div>
-      <h2 class="section-title">Projects I'm proud of</h2>
+      <div class="section-label">✦ My Creations ✦</div>
+      <h2 class="section-title">Featured Builds</h2>
     </div>
     <div class="projects-grid">
-      <div class="project-card">
-        <div class="project-icon" style="background: rgba(108,92,231,0.15);">🎨</div>
-        <h3>Nebula Brand System</h3>
-        <p>Complete identity & design system for a SaaS analytics platform — 40+ components, dark-mode native.</p>
-        <span class="project-tag">Branding</span>
+      <div class="mc-card project-card">
+        <div class="mc-card-inner">
+          <span class="project-icon">🏰</span>
+          <h3>Nether Fortress Rebuild</h3>
+          <p>A 1:1 scale recreation of a Nether Fortress, complete with functional blaze spawner and intricate redstone traps.</p>
+          <span class="project-tag">Mega Build</span>
+          <span class="project-tag gold">Redstone</span>
+        </div>
       </div>
-      <div class="project-card">
-        <div class="project-icon" style="background: rgba(253,121,168,0.15);">🛍️</div>
-        <h3>Velvet Commerce</h3>
-        <p>Headless e-commerce storefront with 3D product previews. Built with Next.js & Shopify Hydrogen.</p>
-        <span class="project-tag">E-Commerce</span>
+      <div class="mc-card project-card">
+        <div class="mc-card-inner">
+          <span class="project-icon">⚙️</span>
+          <h3>Auto-Farm Complex</h3>
+          <p>Fully automated iron, gold, and XP farms stacked in a single 32x32 chunk. Runs at 20 TPS with zero lag.</p>
+          <span class="project-tag gold">Technical</span>
+          <span class="project-tag">Efficiency</span>
+        </div>
       </div>
-      <div class="project-card">
-        <div class="project-icon" style="background: rgba(0,206,201,0.15);">📊</div>
-        <h3>Pulse Dashboard</h3>
-        <p>Real-time analytics dashboard for a fintech startup — 12k+ daily active users, 99.9% uptime.</p>
-        <span class="project-tag">Product Design</span>
+      <div class="mc-card project-card">
+        <div class="mc-card-inner">
+          <span class="project-icon">🌆</span>
+          <h3>Neon City</h3>
+          <p>Cyberpunk-inspired city with 40+ custom buildings, glowing shulker lamps, and hidden easter eggs in every district.</p>
+          <span class="project-tag">Creative</span>
+          <span class="project-tag red">Aesthetic</span>
+        </div>
       </div>
-      <div class="project-card">
-        <div class="project-icon" style="background: rgba(255,184,0,0.15);">🎧</div>
-        <h3>Waveform Studio</h3>
-        <p>Interactive audio visualizer & music portfolio for an electronic label. WebGL-powered, 60fps.</p>
-        <span class="project-tag">Creative Dev</span>
+      <div class="mc-card project-card">
+        <div class="mc-card-inner">
+          <span class="project-icon">🐉</span>
+          <h3>Ender Dragon Arena</h3>
+          <p>Custom boss fight arena with scripted attacks, dynamic lighting, and loot drops. Built for a 100+ player server.</p>
+          <span class="project-tag">PvE</span>
+          <span class="project-tag gold">Server</span>
+        </div>
       </div>
     </div>
   </section>
@@ -727,46 +887,54 @@
   <!-- ═══ ABOUT ═══ -->
   <section class="section" id="about">
     <div class="section-header">
-      <div class="section-label">About Me</div>
-      <h2 class="section-title">Designer. Developer. Problem solver.</h2>
+      <div class="section-label">✦ About Me ✦</div>
+      <h2 class="section-title">The Player Behind the Blocks</h2>
     </div>
-    <div class="about-content">
-      <div class="about-text">
-        <p>I'm a <strong>multidisciplinary creative</strong> with 8+ years of experience turning complex ideas into intuitive, beautiful digital products. I've worked with startups, agencies, and Fortune 500 companies.</p>
-        <p>My process is simple: <strong>listen, prototype, test, ship.</strong> No fluff, no endless meetings — just clean execution and measurable results.</p>
-        <p>When I'm not designing, you'll find me surfing, building mechanical keyboards, or exploring abandoned architecture.</p>
+    <div class="about-grid">
+      <div class="mc-card about-text">
+        <div class="mc-card-inner">
+          <p>Ciao! Sono <strong>Gianmarco D'Assisi</strong>, builder & redstone engineer con <strong>9 anni</strong> di esperienza su Minecraft Java & Bedrock.</p>
+          <p>Ho costruito mappe per server con <strong>oltre 50.000 giocatori attivi</strong>, collaborato con content creator famosi, e vinto 3 competizioni di building a livello internazionale.</p>
+          <p>La mia specialità? <strong>Mega-build funzionali</strong> — strutture enormi che non sono solo belle da vedere, ma anche tecnicamente perfette.</p>
+        </div>
       </div>
-      <div class="about-stats">
-        <div class="stat-card">
-          <div class="stat-number">80+</div>
-          <div class="stat-label">Projects Shipped</div>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-number">120+</div>
+          <div class="stat-label">Builds Completed</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">8</div>
-          <div class="stat-label">Years Experience</div>
+        <div class="stat">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Years Playing</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">32</div>
-          <div class="stat-label">Happy Clients</div>
+        <div class="stat">
+          <div class="stat-number">50K</div>
+          <div class="stat-label">Server Players</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">4</div>
-          <div class="stat-label">Design Awards</div>
+        <div class="stat">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Contest Wins</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ CONTACT ═══ -->
-  <section class="section contact-section" id="contact">
-    <h2>Let's build something<br><span style="background:linear-gradient(135deg,#6c5ce7,#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">extraordinary</span></h2>
-    <p>Have a project in mind? I'm currently taking on new clients for Q3.</p>
-    <a href="mailto:hello@alexrivera.design" class="btn btn-primary" style="font-size:1rem;">hello@alexrivera.design</a>
+  <section class="section" id="contact">
+    <div class="contact-box">
+      <div class="mc-card">
+        <div class="mc-card-inner">
+          <h2>⚡ Let's Build Together ⚡</h2>
+          <p>Hai un progetto Minecraft in mente?<br>Scrivimi per collaborazioni, commissioni o consulenze server.</p>
+          <a href="mailto:gianmarco@dassisi.build" class="mc-btn mc-btn-primary">✉ Send a Message</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ═══ FOOTER ═══ -->
   <footer>
-    © 2025 Alex Rivera · Crafted with obsession · All rights reserved.
+    © 2025 Gianmarco D'Assisi · Not affiliated with Mojang or Microsoft
   </footer>
 
   <!-- ══════════════════════════════════════════════
@@ -775,30 +943,54 @@
   <div id="admin-overlay">
     <div class="admin-panel">
       <div class="admin-header">
-        <h2>🛡️ Access Log <span>Admin</span></h2>
-        <button class="admin-close" id="admin-close-btn" title="Close (ESC)">✕</button>
+        <h2>🛡 Access Log <span class="badge">ADMIN</span></h2>
+        <button class="admin-close" id="admin-close-btn">✕</button>
       </div>
+
       <div class="admin-body">
-        <div id="admin-empty" class="admin-empty">
-          <div class="icon">📡</div>
-          <p>No visitors logged yet.<br>Entries appear as visitors arrive.</p>
+        <!-- LOGIN -->
+        <div id="admin-login" class="login-form">
+          <span class="lock-icon">🔒</span>
+          <h3>Enter Password<br>to Access Panel</h3>
+          <input type="password" id="admin-password" placeholder="PASSWORD" autocomplete="off" />
+          <div class="error-msg" id="login-error"></div>
+          <button class="mc-btn mc-btn-primary" id="login-btn" style="font-size:10px;padding:14px 28px;">Unlock</button>
         </div>
-        <table class="ip-table" id="ip-table" style="display:none;">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>IP Address</th>
-              <th>Timestamp</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="ip-tbody"></tbody>
-        </table>
+
+        <!-- CONTENT -->
+        <div id="admin-content" style="display:none;">
+          <div id="admin-empty" class="admin-empty">
+            <div class="icon">📡</div>
+            <p>No visitors logged yet.</p>
+          </div>
+          <table class="visitors-table" id="visitors-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>IP Address</th>
+                <th>Timestamp</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="visitors-tbody"></tbody>
+          </table>
+        </div>
       </div>
+
       <div class="admin-footer">
-        <span id="admin-count">0 visitors logged</span>
-        <button id="admin-clear-btn">Clear log</button>
+        <span id="admin-count">0 visitors</span>
+        <button id="admin-clear-btn">Clear Log</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ ANTI-INSPECT OVERLAY ═══ -->
+  <div id="anti-inspect">
+    <div class="skull">💀</div>
+    <div>
+      ACCESS DENIED<br><br>
+      Developer tools detected.<br>
+      Close the console to continue.
     </div>
   </div>
 
@@ -810,83 +1002,29 @@
        ══════════════════════════════════════════════ -->
   <script>
     // ═══════════════════════════════════════════════
-    // 1. PARTICLE BACKGROUND
+    // ADMIN PASSWORD — CAMBIA QUESTA!
     // ═══════════════════════════════════════════════
-    (function initParticles() {
-      const canvas = document.getElementById('bg-canvas');
-      const ctx = canvas.getContext('2d');
-      let w, h;
-      const particles = [];
-      const PARTICLE_COUNT = 60;
+    const ADMIN_PASSWORD = "gianmarco2025";
 
-      function resize() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
+    // ═══════════════════════════════════════════════
+    // 1. STARS BACKGROUND
+    // ═══════════════════════════════════════════════
+    (function generateStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 70 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        container.appendChild(star);
       }
-
-      function Particle() {
-        this.x = Math.random() * w;
-        this.y = Math.random() * h;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.r = Math.random() * 1.5 + 0.5;
-        this.alpha = Math.random() * 0.4 + 0.1;
-      }
-
-      Particle.prototype.update = function () {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0) this.x = w;
-        if (this.x > w) this.x = 0;
-        if (this.y < 0) this.y = h;
-        if (this.y > h) this.y = 0;
-      };
-
-      Particle.prototype.draw = function () {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(108, 92, 231, ${this.alpha})`;
-        ctx.fill();
-      };
-
-      function init() {
-        resize();
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          particles.push(new Particle());
-        }
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, w, h);
-        // draw connections
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.strokeStyle = `rgba(108, 92, 231, ${0.08 * (1 - dist / 150)})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
-          }
-        }
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(animate);
-      }
-
-      window.addEventListener('resize', resize);
-      init();
-      animate();
     })();
 
     // ═══════════════════════════════════════════════
     // 2. VISITOR LOGGING (IP tracking)
     // ═══════════════════════════════════════════════
-    const STORAGE_KEY = 'portfolio_admin_visitors';
+    const STORAGE_KEY = 'gda_admin_visitors';
 
     function getVisitors() {
       try {
@@ -899,44 +1037,36 @@
     }
 
     async function logVisitor() {
-      // 1. Try to get real public IP (api.ipify.org / ipapi.co)
+      if (sessionStorage.getItem('gda_visitor_logged')) return;
+
       let ip = null;
       try {
         const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(4000) });
         const data = await res.json();
         ip = data.ip;
       } catch {
-        // Fallback: generate a local pseudo-IP for demo purposes
-        const stored = localStorage.getItem('visitor_pseudo_ip');
+        const stored = localStorage.getItem('gda_pseudo_ip');
         if (stored) {
           ip = stored;
         } else {
           const rand = () => Math.floor(Math.random() * 255);
           ip = `${rand()}.${rand()}.${rand()}.${rand()}`;
-          localStorage.setItem('visitor_pseudo_ip', ip);
+          localStorage.setItem('gda_pseudo_ip', ip);
         }
       }
 
-      // 2. Build entry
       const entry = {
         ip: ip,
-        time: new Date().toISOString(),
-        userAgent: navigator.userAgent.substring(0, 80)
+        time: new Date().toISOString()
       };
 
-      // 3. Save (avoid duplicate identical entries within same page load)
       const visitors = getVisitors();
-      // Only add once per page session
-      if (!sessionStorage.getItem('visitor_logged')) {
-        visitors.unshift(entry);
-        // Keep max 200 entries
-        if (visitors.length > 200) visitors.pop();
-        saveVisitors(visitors);
-        sessionStorage.setItem('visitor_logged', '1');
-      }
+      visitors.unshift(entry);
+      if (visitors.length > 200) visitors.pop();
+      saveVisitors(visitors);
+      sessionStorage.setItem('gda_visitor_logged', '1');
     }
 
-    // Log the visitor immediately
     logVisitor();
 
     // ═══════════════════════════════════════════════
@@ -945,57 +1075,24 @@
     const adminOverlay = document.getElementById('admin-overlay');
     const adminCloseBtn = document.getElementById('admin-close-btn');
     const adminClearBtn = document.getElementById('admin-clear-btn');
+    const adminLogin = document.getElementById('admin-login');
+    const adminContent = document.getElementById('admin-content');
     const adminEmpty = document.getElementById('admin-empty');
-    const ipTable = document.getElementById('ip-table');
-    const ipTbody = document.getElementById('ip-tbody');
+    const visitorsTable = document.getElementById('visitors-table');
+    const visitorsTbody = document.getElementById('visitors-tbody');
     const adminCount = document.getElementById('admin-count');
+    const passwordInput = document.getElementById('admin-password');
+    const loginError = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
 
-    let ctrlPressed = false;
-    let cPressed = false;
-
-    // Detect Ctrl held down
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Control') ctrlPressed = true;
-    });
-
-    window.addEventListener('keyup', (e) => {
-      // Track 'c' key press while Ctrl is held
-      if (ctrlPressed && (e.key === 'c' || e.key === 'C') && !e.ctrlKey) {
-        // Note: Ctrl+C is copy — but we detect release of c after ctrl
-        cPressed = true;
-        setTimeout(() => { cPressed = false; }, 800);
-      }
-
-      if (e.key === 'Control') {
-        // Reset on ctrl release after a short delay
-        setTimeout(() => {
-          ctrlPressed = false;
-          cPressed = false;
-        }, 300);
-      }
-    });
-
-    // Listen for 'b' while c was pressed with ctrl
-    window.addEventListener('keydown', (e) => {
-      if (ctrlPressed && cPressed && (e.key === 'b' || e.key === 'B') && !e.ctrlKey) {
-        e.preventDefault();
-        openAdmin();
-        ctrlPressed = false;
-        cPressed = false;
-      }
-    });
-
-    // Alternative: full sequence detection: Ctrl+C released, then B pressed
-    // Simpler robust approach: track a sequence buffer
+    // Combo detection: Ctrl+C then B
     let keyBuffer = '';
     let bufferTimeout = null;
 
     document.addEventListener('keydown', (e) => {
-      // Ignore if typing in an input/textarea
       const tag = document.activeElement.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-      // Build a simple buffer of last pressed keys
       if (e.ctrlKey && e.key.toLowerCase() === 'c') {
         keyBuffer = 'CTRL_C';
         clearTimeout(bufferTimeout);
@@ -1006,9 +1103,13 @@
         clearTimeout(bufferTimeout);
         openAdmin();
       }
+
+      if (e.key === 'Escape' && adminOverlay.classList.contains('open')) {
+        closeAdmin();
+      }
     });
 
-    // Fallback combo detection (belt & suspenders)
+    // Fallback: Ctrl held + C + B
     let comboKeys = new Set();
     document.addEventListener('keydown', (e) => {
       comboKeys.add(e.key.toLowerCase());
@@ -1023,75 +1124,101 @@
       comboKeys.delete(e.key.toLowerCase());
     });
 
-    // ESC to close
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && adminOverlay.classList.contains('open')) {
-        closeAdmin();
-      }
-    });
-
-    // Close button
     adminCloseBtn.addEventListener('click', closeAdmin);
-
-    // Click outside to close
     adminOverlay.addEventListener('click', (e) => {
       if (e.target === adminOverlay) closeAdmin();
     });
 
-    // Clear log
-    adminClearBtn.addEventListener('click', () => {
-      if (confirm('Clear all visitor logs? This cannot be undone.')) {
-        localStorage.removeItem(STORAGE_KEY);
-        renderVisitors();
-        showToast('🗑️ Visitor log cleared');
-      }
+    // Login
+    loginBtn.addEventListener('click', tryLogin);
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryLogin();
     });
 
-    // ═══════════════════════════════════════════════
-    // 4. RENDER ADMIN
-    // ═══════════════════════════════════════════════
+    function tryLogin() {
+      const val = passwordInput.value;
+      if (val === ADMIN_PASSWORD) {
+        sessionStorage.setItem('gda_admin_auth', '1');
+        adminLogin.style.display = 'none';
+        adminContent.style.display = 'block';
+        loginError.textContent = '';
+        passwordInput.value = '';
+        renderVisitors();
+        showToast('✅ Access granted');
+      } else {
+        loginError.textContent = '⚠ WRONG PASSWORD';
+        passwordInput.value = '';
+        passwordInput.focus();
+        // shake animation
+        passwordInput.style.animation = 'none';
+        setTimeout(() => {
+          passwordInput.style.animation = 'shake 0.3s';
+        }, 10);
+      }
+    }
+
     function openAdmin() {
       adminOverlay.classList.add('open');
-      renderVisitors();
-      showToast('🛡️ Admin panel unlocked');
+      // Check if already authenticated this session
+      if (sessionStorage.getItem('gda_admin_auth') === '1') {
+        adminLogin.style.display = 'none';
+        adminContent.style.display = 'block';
+        renderVisitors();
+      } else {
+        adminLogin.style.display = 'block';
+        adminContent.style.display = 'none';
+        loginError.textContent = '';
+        passwordInput.value = '';
+        setTimeout(() => passwordInput.focus(), 100);
+      }
+      showToast('🛡 Admin panel unlocked');
     }
 
     function closeAdmin() {
       adminOverlay.classList.remove('open');
     }
 
+    // Clear log
+    adminClearBtn.addEventListener('click', () => {
+      if (confirm('Clear all visitor logs?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderVisitors();
+        showToast('🗑 Log cleared');
+      }
+    });
+
     function renderVisitors() {
       const visitors = getVisitors();
-      adminCount.textContent = visitors.length + ' visitor' + (visitors.length !== 1 ? 's' : '') + ' logged';
+      adminCount.textContent = visitors.length + ' visitor' + (visitors.length !== 1 ? 's' : '');
 
       if (visitors.length === 0) {
         adminEmpty.style.display = 'block';
-        ipTable.style.display = 'none';
-        ipTbody.innerHTML = '';
+        visitorsTable.style.display = 'none';
+        visitorsTbody.innerHTML = '';
         return;
       }
 
       adminEmpty.style.display = 'none';
-      ipTable.style.display = 'table';
+      visitorsTable.style.display = 'table';
 
-      ipTbody.innerHTML = visitors.map((v, i) => {
-        const date = new Date(v.time);
-        const timeStr = date.toLocaleString('en-US', {
+      visitorsTbody.innerHTML = visitors.map((v, i) => {
+        const d = new Date(v.time);
+        const timeStr = d.toLocaleString('it-IT', {
           month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
         });
         return `
           <tr>
             <td style="color:#555;">${String(i + 1).padStart(2, '0')}</td>
-            <td><span class="ip-code">${v.ip}</span></td>
-            <td><span class="ip-time">${timeStr}</span></td>
-            <td><span class="ip-badge">active</span></td>
+            <td class="ip">${v.ip}</td>
+            <td class="time">${timeStr}</td>
+            <td><span class="visitor-status">ACTIVE</span></td>
           </tr>
         `;
       }).join('');
     }
 
     // ═══════════════════════════════════════════════
-    // 5. TOAST
+    // 4. TOAST
     // ═══════════════════════════════════════════════
     let toastTimeout;
     function showToast(msg) {
@@ -1099,9 +1226,69 @@
       toast.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2500);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ═══════════════════════════════════════════════
+    // 5. ANTI-INSPECT
+    // ═══════════════════════════════════════════════
+    const antiInspect = document.getElementById('anti-inspect');
+
+    // Block right click
+    document.addEventListener('contextmenu', (e) => {
+      // Allow right click inside admin input
+      if (e.target.tagName === 'INPUT') return;
+      e.preventDefault();
+      showToast('⚠ Right click disabled');
+    });
+
+    // Block F12
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F12') {
+        e.preventDefault();
+        triggerAntiInspect();
+      }
+      // Ctrl+Shift+I / J / C
+      if (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        triggerAntiInspect();
+      }
+      // Ctrl+U (view source)
+      if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+        e.preventDefault();
+        triggerAntiInspect();
+      }
+    });
+
+    // Detect devtools open (window size heuristic)
+    let devtoolsOpen = false;
+    function checkDevTools() {
+      const threshold = 160;
+      const widthDiff = window.outerWidth - window.innerWidth > threshold;
+      const heightDiff = window.outerHeight - window.innerHeight > threshold;
+
+      if (widthDiff || heightDiff) {
+        if (!devtoolsOpen) {
+          devtoolsOpen = true;
+          // Allow admin panel to be open (we use it legitimately)
+          if (!adminOverlay.classList.contains('open')) {
+            triggerAntiInspect();
+          }
+        }
+      } else {
+        devtoolsOpen = false;
+        if (!adminOverlay.classList.contains('open')) {
+          antiInspect.classList.remove('show');
+        }
+      }
+    }
+
+    setInterval(checkDevTools, 800);
+
+    function triggerAntiInspect() {
+      // Don't trigger if admin panel is open
+      if (adminOverlay.classList.contains('open')) return;
+      antiInspect.classList.add('show');
     }
 
     // ═══════════════════════════════════════════════
@@ -1117,6 +1304,16 @@
       });
     });
 
+    // Prevent drag of images/emojis
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Prevent text selection outside allowed areas
+    document.addEventListener('selectstart', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.closest('[data-selectable]')) return;
+      // Allow selection inside admin panel and paragraphs
+      if (e.target.closest('#admin-overlay') || e.target.tagName === 'P' || e.target.tagName === 'TD') return;
+      e.preventDefault();
+    });
   </script>
 </body>
 </html>
